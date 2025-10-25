@@ -7,7 +7,6 @@
     <form method="POST" action="{{ route('auth.card.login') }}">
         @csrf
 
-        <!-- Номер картки -->
         <div class="mb-3">
             <label for="card_number" class="form-label">Номер картки</label>
             <input type="text" name="card_number" id="card_number" class="form-control" required value="{{ old('card_number') }}">
@@ -16,7 +15,6 @@
             @enderror
         </div>
 
-        <!-- Пароль -->
         <div class="mb-3">
             <label for="password" class="form-label">Пароль</label>
             <input type="password" name="password" id="password" class="form-control" required>
@@ -32,7 +30,6 @@
 
     <hr>
 
-    {{-- Вхід за email --}}
     <div class="text-center">
         <a href="{{ route('login') }}" class="btn btn-outline-secondary w-100">
             Увійти за email

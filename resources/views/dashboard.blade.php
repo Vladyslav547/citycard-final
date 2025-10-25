@@ -2,7 +2,6 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Кабінет користувача') }}
         </h2>
     </x-slot>
 
@@ -13,14 +12,12 @@
                     Ви увійшли у свій акаунт ✅
                 </p>
 
-                {{-- Якщо адмін --}}
                 @if(Auth::user() && Auth::user()->is_admin)
                     <a href="{{ route('admin.dashboard') }}"
                        class="inline-block bg-indigo-600 text-white px-4 py-2 rounded-md shadow hover:bg-indigo-700 transition">
                         Перейти в адмін-панель
                     </a>
                 @else
-                    {{-- Якщо звичайний користувач --}}
                     <a href="{{ route('user.cards.index') }}"
                        class="inline-block bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition">
                         Мої картки

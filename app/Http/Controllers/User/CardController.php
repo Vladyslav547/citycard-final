@@ -3,23 +3,37 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\Card\StoreCardRequest;
+use App\Http\Requests\User\Card\StoreRechargeRequest;
+use App\Http\Requests\User\Card\StoreRideRequest;
 use App\Models\Card;
-use App\Models\City;
 use App\Models\CardRecharge;
 use App\Models\CardRide;
+use App\Models\City;
 use App\Models\TicketType;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
+/**
+ * User-facing CardController.
+ *
+ * Handles listing user cards, creating cards, recharges and recording rides.
+ */
 class CardController extends Controller
 {
+    /**
+     * Require authentication for all actions.
+     */
     public function __construct()
     {
         $this->middleware(['auth']);
     }
 
-    /** Список карток користувача */
-    public function index()
+    /**
+     * List cards for current user.
+     */
+    public function index(): View
     {
         $cards = Card::where('user_id', auth()->id())
             ->with('city')
@@ -29,28 +43,30 @@ class CardController extends Controller
         return view('user.cards.index', compact('cards'));
     }
 
-    /** Форма створення картки */
-    public function create()
+    /**
+     * Show form to create a new card.
+     */
+    public function create(): View
     {
         $cities = City::orderBy('name')->get();
         return view('user.cards.create', compact('cities'));
     }
 
-    /** AJAX: отримати типи квитків для міста */
-    public function getTicketTypesByCity($cityId)
+    /**
+     * AJAX: get ticket types by city.
+     */
+    public function getTicketTypesByCity(int $cityId)
     {
         $city = City::with('ticketTypes')->findOrFail($cityId);
         return response()->json($city->ticketTypes);
     }
 
-    /** Зберегти картку */
-    public function store(Request $request)
+    /**
+     * Store new card.
+     */
+    public function store(StoreCardRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'number'  => 'required|string|max:50|unique:cards,number',
-            'city_id' => 'required|exists:cities,id',
-        ]);
-
+        $data = $request->validated();
         $data['user_id'] = auth()->id();
         $data['balance'] = 0;
 
@@ -61,15 +77,17 @@ class CardController extends Controller
             ->with('success', 'Картку створено.');
     }
 
-    /** Перегляд картки */
-    public function show(Card $card)
+    /**
+     * Show card details.
+     */
+    public function show(Card $card): View
     {
         $this->authorizeCard($card);
 
         $card->load([
             'city',
             'recharges' => fn($q) => $q->latest(),
-            'rides' => fn($q) => $q->latest(),
+            'rides'     => fn($q) => $q->latest(),
         ]);
 
         $ticketTypes = $card->city
@@ -83,15 +101,13 @@ class CardController extends Controller
         return view('user.cards.show', compact('card', 'ticketTypes', 'transportTypes'));
     }
 
-    /** Поповнення балансу */
-    public function storeRecharge(Request $request, Card $card)
+    /**
+     * Store a card recharge.
+     */
+    public function storeRecharge(StoreRechargeRequest $request, Card $card): RedirectResponse
     {
         $this->authorizeCard($card);
-
-        $data = $request->validate([
-            'amount'      => 'required|numeric|min:1',
-            'description' => 'nullable|string|max:255',
-        ]);
+        $data = $request->validated();
 
         DB::transaction(function () use ($card, $data) {
             CardRecharge::create([
@@ -106,15 +122,13 @@ class CardController extends Controller
         return back()->with('success', 'Баланс поповнено.');
     }
 
-    /** Проведення поїздки */
-    public function storeRide(Request $request, Card $card)
+    /**
+     * Record a ride (spend).
+     */
+    public function storeRide(StoreRideRequest $request, Card $card): RedirectResponse
     {
         $this->authorizeCard($card);
-
-        $data = $request->validate([
-            'ticket_type_id'    => 'required|exists:ticket_types,id',
-            'transport_type_id' => 'required|exists:transport_types,id',
-        ]);
+        $data = $request->validated();
 
         $ticketType = TicketType::findOrFail($data['ticket_type_id']);
         $price = $ticketType->price;
@@ -139,8 +153,10 @@ class CardController extends Controller
         return back()->with('success', 'Поїздку зафіксовано.');
     }
 
-    /** Видалення картки */
-    public function destroy(Card $card)
+    /**
+     * Delete card (only owner allowed).
+     */
+    public function destroy(Card $card): RedirectResponse
     {
         $this->authorizeCard($card);
 
@@ -151,7 +167,9 @@ class CardController extends Controller
             ->with('success', 'Картку видалено.');
     }
 
-    /** Перевірка доступу */
+    /**
+     * Ensure current user owns the card.
+     */
     private function authorizeCard(Card $card): void
     {
         if ($card->user_id !== auth()->id()) {

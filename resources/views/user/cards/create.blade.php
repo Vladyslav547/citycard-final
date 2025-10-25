@@ -4,7 +4,6 @@
 <div class="container">
     <h1>Створити картку</h1>
 
-    {{-- Вивід помилок --}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>

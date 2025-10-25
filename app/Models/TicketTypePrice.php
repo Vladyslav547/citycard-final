@@ -9,11 +9,14 @@ class TicketTypePrice extends Model
 {
     use HasFactory;
 
+    // Mass-assignable attributes
     protected $fillable = [
         'ticket_type_id',
         'transport_type_id',
         'price',
     ];
+
+    // Relations
 
     public function ticketType()
     {

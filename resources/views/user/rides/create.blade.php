@@ -9,7 +9,6 @@
 
         <input type="hidden" name="city_id" value="{{ $city->id }}">
 
-        {{-- Тип транспорту --}}
         <div class="mb-3">
             <label for="transport_id" class="form-label">Тип транспорту</label>
             <select name="transport_id" id="transport_id" class="form-control" required>
@@ -20,7 +19,6 @@
             </select>
         </div>
 
-        {{-- Тип квитка --}}
         <div class="mb-3">
             <label for="ticket_type_id" class="form-label">Тип квитка</label>
             <select name="ticket_type_id" id="ticket_type_id" class="form-control" required>

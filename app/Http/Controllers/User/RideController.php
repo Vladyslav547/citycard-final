@@ -3,40 +3,44 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\Ride\StoreRideRequest;
 use App\Models\Card;
 use App\Models\Ride;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class RideController extends Controller
 {
-    public function create($cardId)
+    /**
+     * Show create ride form for a card.
+     */
+    public function create(int $cardId): View
     {
         $card = Card::findOrFail($cardId);
         $city = $card->city;
 
-        $transports = $city->transportTypes; 
+        // Transport types and ticket types for the card's city
+        $transports = $city->transportTypes;
         $ticketTypes = $city->ticketTypes;
 
         return view('user.rides.create', compact('card', 'city', 'transports', 'ticketTypes'));
     }
 
-    public function store(Request $request, $cardId)
+    /**
+     * Store ride record.
+     */
+    public function store(StoreRideRequest $request, int $cardId): RedirectResponse
     {
-        $request->validate([
-            'city_id'        => 'required|exists:cities,id',
-            'transport_id'   => 'required|exists:transport_types,id',
-            'ticket_type_id' => 'required|exists:ticket_types,id',
-        ]);
-
         Ride::create([
             'card_id'        => $cardId,
-            'city_id'        => $request->city_id,
-            'transport_id'   => $request->transport_id,
-            'ticket_type_id' => $request->ticket_type_id,
+            'city_id'        => $request->validated()['city_id'],
+            'transport_id'   => $request->validated()['transport_id'],
+            'ticket_type_id' => $request->validated()['ticket_type_id'],
             'ride_time'      => now(),
         ]);
 
-        return redirect()->route('user.cards.show', $cardId)
+        return redirect()
+            ->route('user.cards.show', $cardId)
             ->with('success', 'Поїздка успішно додана!');
     }
 }
