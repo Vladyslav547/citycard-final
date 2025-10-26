@@ -29,3 +29,4 @@ php artisan migrate --seed
 
 php artisan serve
 # App runs at http://127.0.0.1:8000
+  
