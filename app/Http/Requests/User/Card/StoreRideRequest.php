@@ -6,17 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRideRequest extends FormRequest
 {
-    /**
-     * Authorize any authenticated user.
-     */
     public function authorize(): bool
     {
         return auth()->check();
     }
 
-    /**
-     * Validation rules for recording a ride.
-     */
     public function rules(): array
     {
         return [

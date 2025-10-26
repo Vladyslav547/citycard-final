@@ -68,6 +68,4 @@ Route::get('/login-card', [CardLoginController::class, 'showLoginForm'])
 Route::post('/login-card', [CardLoginController::class, 'login'])
     ->name('auth.card.login');
 
-// legacy deletion route present in project
-Route::delete('/user/cards/{card}', [App\Http\Controllers\User\CardController::class, 'destroy'])
-    ->name('user.cards.destroy');
+

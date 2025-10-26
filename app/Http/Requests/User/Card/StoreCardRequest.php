@@ -6,17 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCardRequest extends FormRequest
 {
-    /**
-     * Authorize any authenticated user.
-     */
     public function authorize(): bool
     {
         return auth()->check();
     }
 
-    /**
-     * Validation rules for creating a card.
-     */
     public function rules(): array
     {
         return [

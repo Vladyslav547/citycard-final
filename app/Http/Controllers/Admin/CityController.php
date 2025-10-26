@@ -7,8 +7,8 @@ use App\Http\Requests\Admin\City\StoreCityRequest;
 use App\Http\Requests\Admin\City\UpdateCityRequest;
 use App\Models\City;
 use App\Models\TransportType;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 
 /**
  * City management for admin area.
@@ -18,46 +18,35 @@ use Illuminate\View\View;
  */
 class CityController extends Controller
 {
-    /**
-     * Constructor: require auth + admin middleware.
-     */
+    /** Constructor: require auth + admin middleware. */
     public function __construct()
     {
         $this->middleware(['auth', 'admin']);
     }
 
-    /**
-     * Display paginated list of cities with transport types.
-     */
+    /** Display paginated list of cities with transport types. */
     public function index(): View
     {
         $cities = City::with('transportTypes')->orderBy('name')->paginate(15);
         return view('admin.cities.index', compact('cities'));
     }
 
-    /**
-     * Show form to create a city.
-     */
+    /** Show form to create a city. */
     public function create(): View
     {
         $transportTypes = TransportType::orderBy('name')->get();
         return view('admin.cities.create', compact('transportTypes'));
     }
 
-    /**
-     * Store a newly created city and sync transport types pivot.
-     */
+    /** Store a newly created city and sync transport types pivot. */
     public function store(StoreCityRequest $request): RedirectResponse
     {
-        $city = City::create(['name' => $request->validated()['name']]);
+        $city = City::create(['name' => $request->validated('name')]);
         $city->transportTypes()->sync($request->input('transport_types', []));
-
         return redirect()->route('admin.cities.index')->with('success', 'Місто створено.');
     }
 
-    /**
-     * Show edit form for a city.
-     */
+    /** Show edit form for a city. */
     public function edit(City $city): View
     {
         $transportTypes = TransportType::orderBy('name')->get();
@@ -65,25 +54,19 @@ class CityController extends Controller
         return view('admin.cities.edit', compact('city', 'transportTypes', 'selected'));
     }
 
-    /**
-     * Update city and its transport types relationship.
-     */
+    /** Update city and its transport types relationship. */
     public function update(UpdateCityRequest $request, City $city): RedirectResponse
     {
-        $city->update(['name' => $request->validated()['name']]);
+        $city->update(['name' => $request->validated('name')]);
         $city->transportTypes()->sync($request->input('transport_types', []));
-
         return redirect()->route('admin.cities.index')->with('success', 'Місто оновлено.');
     }
 
-    /**
-     * Delete a city and detach pivot relations.
-     */
+    /** Delete a city and detach pivot relations. */
     public function destroy(City $city): RedirectResponse
     {
         $city->transportTypes()->detach();
         $city->delete();
-
         return redirect()->route('admin.cities.index')->with('success', 'Місто видалено.');
     }
 }
