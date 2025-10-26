@@ -1,35 +1,31 @@
-# CityCard-Final – CRUD додаток
+# CityCard – Laravel CRUD app
 
-## 🔑 Авторизація
-- Вхід відбувається за **Email + пароль**.
-- Телефон при реєстрації є **необов’язковим**.
+A small Laravel app to manage transit cards, cities, transport types, ticket types, top-ups and rides.  
+Supports basic user authentication (email + password) and an admin area.
 
-## 👤 Реєстрація користувача
-- **Обов’язкові поля:** Ім’я, Email, Пароль, Підтвердження пароля.
-- **Опціональне поле:** Телефон.
+## Features
+- User auth (email + password), registration.
+- User dashboard: own cards, balance, top-up history, rides history.
+- Admin: CRUD for Cities, Ticket Types, Transport Types; Users list with delete-only.
+- Clean structure, English comments, FormRequest-based validation (post-refactor).
 
-## 🛠 CRUD для користувачів
-- **C (Create)** – користувач може зареєструватися через форму.
-- **R (Read)** – адміністратор бачить список користувачів (ID, ім’я, email, дата реєстрації).
-- **U (Update)** – адміністратор **не редагує** дані користувачів.
-- **D (Delete)** – адміністратор може видаляти користувачів.
+## Tech Stack
+- PHP 8.2+, Laravel 10+
+- MySQL / MariaDB
+- Bootstrap 5 (Blade views)
+- Composer, Artisan
 
-## 📍 Ролі та доступи
-- **Звичайний користувач**
-  - Може зареєструватися та увійти в систему.
-  - Використовує свій акаунт і картку.
-- **Адміністратор**
-  - Має доступ до списку користувачів.
-  - Може видаляти користувачів.
-
----
-
-## 🚀 Запуск проєкту
+## Getting Started
 ```bash
-git clone https://github.com/Vladyslav547/citycard-final.git
-cd citycard-final
-composer install
+git clone https://github.com/<your-username>/citycard.git
+cd citycard
+
 cp .env.example .env
+# Set DB_* credentials in .env
+
+composer install
 php artisan key:generate
 php artisan migrate --seed
+
 php artisan serve
+# App runs at http://127.0.0.1:8000
