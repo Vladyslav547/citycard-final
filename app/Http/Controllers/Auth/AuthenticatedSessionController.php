@@ -9,11 +9,13 @@ use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
+    // Show login view
     public function create()
     {
         return view('auth.login');
     }
 
+    // Handle normal login using email
     public function store(Request $request)
     {
         $credentials = $request->validate([
@@ -36,6 +38,7 @@ class AuthenticatedSessionController extends Controller
         );
     }
 
+    // Logout
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();

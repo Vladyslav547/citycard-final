@@ -12,13 +12,28 @@ class RegisterController extends Controller
 {
     use RegistersUsers;
 
+    /**
+     * Redirect path after successful registration.
+     *
+     * @var string
+     */
     protected $redirectTo = '/my-cards';
 
+    /**
+     * Create a new controller instance.
+     * Applies the "guest" middleware to prevent logged-in users from accessing registration.
+     */
     public function __construct()
     {
         $this->middleware('guest');
     }
 
+    /**
+     * Get a validator for incoming registration data.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -29,6 +44,12 @@ class RegisterController extends Controller
         ]);
     }
 
+    /**
+     * Create a new user instance after successful validation.
+     *
+     * @param  array  $data
+     * @return \App\Models\User
+     */
     protected function create(array $data)
     {
         return User::create([

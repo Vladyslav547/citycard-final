@@ -7,12 +7,14 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+    // List users for admin
     public function index()
     {
         $users = User::all();
         return view('admin.users.index', compact('users'));
     }
 
+    // Delete user (prevent deleting admins)
     public function destroy(User $user)
     {
         if ($user->is_admin) {

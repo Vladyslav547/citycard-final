@@ -11,18 +11,31 @@ use Illuminate\Support\Facades\Hash;
 
 class UserRegisterController extends Controller
 {
+    /**
+     * Show the registration form for user.
+     *
+     * @return \Illuminate\View\View
+     */
     public function showRegistrationForm()
     {
         return view('auth.user-register');
     }
 
+    /**
+     * Handle registration request from user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function register(Request $request)
     {
+        // Trim phone and card number to remove extra spaces
         $request->merge([
             'phone' => trim($request->phone),
             'card_number' => trim($request->card_number),
         ]);
 
+        // Validate user input
         $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
@@ -33,29 +46,36 @@ class UserRegisterController extends Controller
                 function ($attribute, $value, $fail) {
                     $card = Card::where('number', $value)->first();
                     if ($card && $card->user_id !== null) {
-                        $fail('Ця картка вже прив’язана до іншого користувача.');
+                        $fail('This card is already linked to another user.');
                     }
                 },
             ],
         ]);
 
-        // 🔸 Створення користувача
+        // 🔸 Create user record
         $user = User::create([
             'name' => $request->name,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
         ]);
 
-        // 🔸 Прив’язка картки
+        // 🔸 Attach card to user
         $card = Card::where('number', $request->card_number)->first();
         $card->user_id = $user->id;
         $card->save();
 
+        // Automatically log the user in
         Auth::login($user);
 
         return redirect()->route('user.dashboard');
     }
 
+    /**
+     * Logout the currently authenticated user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function logout(Request $request)
     {
         Auth::logout();

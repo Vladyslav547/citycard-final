@@ -4,7 +4,6 @@
 <div class="container" style="max-width: 480px">
     <h1 class="h3 mb-3">Вхід</h1>
 
-    {{-- Стандартний вхід --}}
     <form method="POST" action="{{ route('login') }}" class="mb-4">
         @csrf
 
@@ -30,7 +29,6 @@
 
     <hr>
 
-    {{-- Вхід по картці --}}
     <div class="text-center">
         <a href="{{ route('auth.card.form') }}" class="btn btn-outline-secondary w-100">
             Увійти по картці

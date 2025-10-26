@@ -10,18 +10,19 @@ use App\Models\Card;
 
 class CardLoginController extends Controller
 {
+    // Allow only guests to access login
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
     }
 
-    // Показує форму входу за карткою
+    // Show card-login form
     public function showLoginForm()
     {
         return view('auth.login-card');
     }
 
-    // Обробка логіну 
+    // Process login by card number + account password
     public function login(Request $request)
     {
         $request->validate([
@@ -43,11 +44,13 @@ class CardLoginController extends Controller
             return back()->withErrors(['password' => 'Невірний пароль.'])->withInput();
         }
 
+        // Log in the user and redirect to user's cards
         Auth::login($user, true);
 
         return redirect()->intended(route('user.cards.index'));
     }
 
+    // Logout
     public function logout(Request $request)
     {
         Auth::logout();

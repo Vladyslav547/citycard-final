@@ -9,13 +9,22 @@ use App\Models\Card;
 
 class UserLoginController extends Controller
 {
-    // Показ форми входу для користувача
+    /**
+     * Display the user login form.
+     *
+     * @return \Illuminate\View\View
+     */
     public function showLoginForm()
     {
         return view('auth.user_login');
     }
 
-    // Обробка входу користувача
+    /**
+     * Handle user login request via card number and phone number.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -30,10 +39,15 @@ class UserLoginController extends Controller
             return redirect()->route('user.dashboard');
         }
 
-        return back()->withErrors(['card_number' => 'Невірні дані']);
+        return back()->withErrors(['card_number' => 'Invalid credentials']);
     }
 
-    // Вихід користувача
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function logout(Request $request)
     {
         Auth::logout();

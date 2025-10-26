@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminLoginController extends Controller
 {
-    // Показ форми входу
+    // Show login form
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    // Обробка входу
+    // Input processing
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -31,7 +31,7 @@ class AdminLoginController extends Controller
         return back()->withErrors(['email' => 'Невірні дані']);
     }
 
-    // Вихід
+    // Logout
     public function logout(Request $request)
     {
         Auth::logout();
