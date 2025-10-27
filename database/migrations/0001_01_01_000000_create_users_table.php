@@ -9,8 +9,8 @@ return new class extends Migration {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('phone')->unique(); // для користувачів
-            $table->string('email')->unique()->nullable(); // для адмінів
+            $table->string('phone', 20)->nullable(); 
+            $table->string('email')->unique()->nullable(); 
             $table->string('password')->nullable();
             $table->enum('role', ['user', 'admin'])->default('user');
             $table->timestamps();

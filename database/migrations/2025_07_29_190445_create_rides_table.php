@@ -10,9 +10,19 @@ return new class extends Migration
     {
         Schema::create('rides', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('card_id')->constrained()->onDelete('cascade');
-            $table->foreignId('city_id')->constrained()->onDelete('cascade');
-            $table->foreignId('transport_id')->constrained()->onDelete('cascade');
+
+            $table->foreignId('card_id')
+                ->constrained()                
+                ->cascadeOnDelete();
+
+            $table->foreignId('city_id')
+                ->constrained()                
+                ->cascadeOnDelete();
+
+            $table->foreignId('transport_id')
+                ->constrained('transport_types')
+                ->cascadeOnDelete();
+
             $table->timestamp('ride_time')->useCurrent();
             $table->timestamps();
         });

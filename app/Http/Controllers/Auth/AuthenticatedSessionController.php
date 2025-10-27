@@ -3,21 +3,31 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
+/**
+ * Default user session controller (email + password).
+ */
 class AuthenticatedSessionController extends Controller
 {
-    // Show login view
-    public function create()
+    /**
+     * Show login form.
+     */
+    public function create(): View
     {
         return view('auth.login');
     }
 
-    // Handle normal login using email
-    public function store(Request $request)
+    /**
+     * Handle login attempt (user/admin).
+     */
+    public function store(Request $request): RedirectResponse
     {
+        // Kept inline for now; can be moved to a FormRequest if required.
         $credentials = $request->validate([
             'email'    => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
@@ -38,8 +48,10 @@ class AuthenticatedSessionController extends Controller
         );
     }
 
-    // Logout
-    public function destroy(Request $request)
+    /**
+     * Log out and invalidate session.
+     */
+    public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
 

@@ -3,20 +3,20 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'admin@citycard.com'],
+            ['email' => 'admin@citycard.test'],
             [
-                'name' => 'Адмін',
-                'phone' => '0000000000',
+                'name' => 'Admin',
+                'phone' => null,
                 'password' => Hash::make('admin123'),
-                'is_admin' => true
+                'is_admin' => true,
             ]
         );
     }

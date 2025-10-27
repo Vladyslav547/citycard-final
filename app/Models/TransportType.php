@@ -25,7 +25,11 @@ class TransportType extends Model
      */
     public function cities()
     {
-        return $this->belongsToMany(City::class, 'city_transport_type', 'transport_type_id', 'city_id')
-                    ->select('cities.id', 'cities.name');
+        return $this->belongsToMany(
+            City::class,
+            'city_transport_type',  
+            'transport_type_id',
+            'city_id'
+        )->select('cities.id', 'cities.name');
     }
 }
