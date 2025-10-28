@@ -9,10 +9,8 @@ class TransportTypeSeeder extends Seeder
 {
     public function run(): void
     {
-        $types = ['Автобус', 'Трамвай', 'Тролейбус', 'Метро'];
-
-        foreach ($types as $type) {
-            TransportType::firstOrCreate(['name' => $type]);
+        foreach (['Автобус', 'Трамвай', 'Тролейбус', 'Метро'] as $name) {
+            TransportType::firstOrCreate(['name' => $name]);
         }
     }
 }

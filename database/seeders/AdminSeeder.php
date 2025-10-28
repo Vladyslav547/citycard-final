@@ -17,6 +17,7 @@ class AdminSeeder extends Seeder
                 'phone' => null,
                 'password' => Hash::make('admin123'),
                 'is_admin' => true,
+                'email_verified_at' => now(),
             ]
         );
     }
