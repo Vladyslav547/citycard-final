@@ -1,79 +1,51 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CityCard — Міський портал</title>
-
-    {{-- Bootstrap 5 --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-light">
-<nav class="navbar navbar-expand-lg bg-white shadow-sm">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ url('/') }}">CityCard</a>
+<body class="antialiased bg-gray-100 dark:bg-gray-900">
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-                aria-controls="mainNav" aria-expanded="false" aria-label="Перемкнути навігацію">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<header class="bg-white dark:bg-gray-800 shadow">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-gray-800 dark:text-white">CityCard</h1>
 
-        <div id="mainNav" class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto">
-                @auth
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('user.cards.index') }}">Мої картки</a>
-                    </li>
-                    <li class="nav-item">
-                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-link nav-link p-0">Вийти</button>
-                        </form>
-                    </li>
-                @else
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">Увійти</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-primary ms-lg-2" href="{{ route('register') }}">Розпочати</a>
-                    </li>
-                @endauth
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<main class="container py-5">
-    <div class="row align-items-center gy-4">
-        <div class="col-lg-6">
-            <h1 class="display-5 fw-bold">Ласкаво просимо до CityCard</h1>
-            <p class="text-muted mb-4">
-                Єдина картка для міського транспорту. Поповнення балансу, історія поїздок та зручний доступ — в одному місці.
-            </p>
-            @guest
-                <a class="btn btn-primary btn-lg" href="{{ route('register') }}">Створити обліковий запис</a>
-                <a class="btn btn-outline-secondary btn-lg ms-2" href="{{ route('login') }}">Увійти</a>
+        <nav class="space-x-4">
+            @auth
+                <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 dark:text-gray-300">Панель</a>
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                    @csrf
+                    <button type="submit" class="text-sm text-red-600 dark:text-red-400">Вийти</button>
+                </form>
             @else
-                <a class="btn btn-primary btn-lg" href="{{ route('user.cards.index') }}">Перейти до карток</a>
-            @endguest
-        </div>
-        <div class="col-lg-6">
-            <div class="p-4 bg-white border rounded-4 shadow-sm">
-                <ul class="mb-0">
-                    <li>Картки, баланс, поповнення</li>
-                    <li>Історія поїздок</li>
-                    <li>Підтримка різних типів квитків</li>
-                    <li>Адмін-панель для міст, транспорту, тарифів</li>
-                </ul>
-            </div>
+                <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-300">Увійти</a>
+                <a href="{{ route('register') }}" class="text-sm text-gray-700 dark:text-gray-300">Реєстрація</a>
+            @endauth
+        </nav>
+    </div>
+</header>
+
+<main class="flex items-center justify-center min-h-[75vh] text-center px-4">
+    <div class="max-w-2xl">
+        <h2 class="text-4xl font-extrabold text-gray-800 dark:text-white mb-4">Ласкаво просимо до CityCard</h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-8">
+            Єдина картка для міського транспорту. Поповнення балансу, історія поїздок та зручний доступ — в одному місці.
+        </p>
+
+        <div class="flex items-center justify-center gap-4">
+            <a href="{{ route('register') }}" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Створити обліковий запис</a>
+            <a href="{{ route('login') }}" class="border border-gray-400 dark:border-gray-600 px-6 py-2 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+                Увійти
+            </a>
         </div>
     </div>
 </main>
 
-<footer class="text-center text-muted py-4">
+<footer class="text-center text-sm text-gray-400 dark:text-gray-500 py-4">
     &copy; {{ now()->year }} CityCard. Всі права захищені.
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
